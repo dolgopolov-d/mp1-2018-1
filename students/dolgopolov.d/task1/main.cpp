@@ -3,36 +3,50 @@
 using namespace std;
 	class TTemperature
 	{
-		float tC;
-		float tF;
-		float tK;
+		double tC;
+		double tF;
+		double tK;
+		double tRe;
+		double tR;
 	public:
-		TTemperature(float tC1, float tF1, float tK1) : tC(tC1), tF(tF1), tK(tK1)
+		TTemperature()
 		{
 			cout << "Insert temperature in Celsius\n";
 			cin >> tC;
 			tF = tC * 9 / 5 + 32;
 			tK = tC + 273;
+			tRe = tC * 0.8;
+			tR = tC * 493.47;
 		}
-		float get_tC()
+		double get_tC()
 		{
 			return tC;
 		}
-		float get_tF()
+		double get_tF()
 		{
 			return tF;
 		}
-		float get_tK()
+		double get_tK()
 		{
 			return tK;
+		}
+		double get_tRe()
+		{
+			return tRe;
+		}
+		double get_tR()
+		{
+			return tR;
 		}
 	};
 	int main()
 	{
 		TTemperature temp;
-		cout << "Temperature in C" << temp.get_tC() << endl;
-		cout << "Temperature in F" << temp.get_tF() << endl;
-		cout << "Temperature in K" << temp.get_tK() << endl;
+		cout << "Temperature in Celsius " << temp.get_tC() << endl;
+		cout << "Temperature in Fahrenheit " << temp.get_tF() << endl;
+		cout << "Temperature in Kelvin " << temp.get_tK() << endl;
+		cout << "Temperature in Remyure " << temp.get_tRe() << endl;
+		cout << "Temperature in Rankin " << temp.get_tR() << endl;
 		system("pause");
 		return 0;
 	}
