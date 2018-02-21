@@ -16,11 +16,6 @@ using namespace std;
 			tRe = tC * 0.8;
 			tR = tC * 493.47;
 		}
-		TTemperature &operator=(double _tC)
-		{
-			tC = _tC;
-			return *this;
-		}
 		double get_tC()
 		{
 			return tC;
