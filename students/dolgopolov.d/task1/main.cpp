@@ -9,14 +9,17 @@ using namespace std;
 		double tRe;
 		double tR;
 	public:
-		TTemperature()
+		TTemperature(double t) :tC(t)
 		{
-			cout << "Insert temperature in Celsius\n";
-			cin >> tC;
 			tF = tC * 9 / 5 + 32;
 			tK = tC + 273;
 			tRe = tC * 0.8;
 			tR = tC * 493.47;
+		}
+		TTemperature &operator=(double _tC)
+		{
+			tC = _tC;
+			return *this;
 		}
 		double get_tC()
 		{
@@ -41,7 +44,10 @@ using namespace std;
 	};
 	int main()
 	{
-		TTemperature temp;
+		double t;
+		cout << "Insert temperature in Celsius\n";
+		cin >> t;
+		TTemperature temp(t);
 		cout << "Temperature in Celsius " << temp.get_tC() << endl;
 		cout << "Temperature in Fahrenheit " << temp.get_tF() << endl;
 		cout << "Temperature in Kelvin " << temp.get_tK() << endl;
