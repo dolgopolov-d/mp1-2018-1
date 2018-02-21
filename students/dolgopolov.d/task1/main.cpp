@@ -50,6 +50,14 @@ using namespace std;
 			tR = tC * 493.47;
 			return tR;
 		}
+		void see_T()
+		{
+			cout << "Temperature in Celsius " << get_tC() << endl;
+			cout << "Temperature in Fahrenheit " << get_tF() << endl;
+			cout << "Temperature in Kelvin " << get_tK() << endl;
+			cout << "Temperature in Remyure " << get_tRe() << endl;
+			cout << "Temperature in Rankin " << get_tR() << endl;
+		}
 	};
 	int main()
 	{
@@ -58,25 +66,13 @@ using namespace std;
 		cin >> t;
 		TTemperature temp(t);
 		TTemperature temp1(15);
-		cout << "Temperature in Celsius " << temp.get_tC() << endl;
-		cout << "Temperature in Fahrenheit " << temp.get_tF() << endl;
-		cout << "Temperature in Kelvin " << temp.get_tK() << endl;
-		cout << "Temperature in Remyure " << temp.get_tRe() << endl;
-		cout << "Temperature in Rankin " << temp.get_tR() << endl;
+		temp.see_T();
 		temp = 5;
 		cout << endl;
-		cout << "Temperature in Celsius " << temp.get_tC() << endl;
-		cout << "Temperature in Fahrenheit " << temp.get_tF() << endl;
-		cout << "Temperature in Kelvin " << temp.get_tK() << endl;
-		cout << "Temperature in Remyure " << temp.get_tRe() << endl;
-		cout << "Temperature in Rankin " << temp.get_tR() << endl;
+		temp.see_T();
 		temp = temp1;
 		cout << endl;
-		cout << "Temperature in Celsius " << temp.get_tC() << endl;
-		cout << "Temperature in Fahrenheit " << temp.get_tF() << endl;
-		cout << "Temperature in Kelvin " << temp.get_tK() << endl;
-		cout << "Temperature in Remyure " << temp.get_tRe() << endl;
-		cout << "Temperature in Rankin " << temp.get_tR() << endl;
+		temp.see_T();
 		system("pause");
 		return 0;
 	}
