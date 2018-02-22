@@ -5,11 +5,8 @@ using namespace std;
 	{
 		double tC;
 	public:
-		TTemperature(double t) :tC(t)
+		TTemperature(double t = 0):tC(t)
 		{
-			
-			
-			
 			
 		}
 		TTemperature &operator=(double _tC)
@@ -21,6 +18,10 @@ using namespace std;
 		{
 			tC = temper.tC;
 			return *this;
+		}
+		void set_T(double tC1)
+		{
+			tC = tC1;
 		}
 		double get_tC()
 		{
@@ -49,7 +50,7 @@ using namespace std;
 			double tR;
 			tR = tC * 493.47;
 			return tR;
-		}
+		}	
 		void see_T()
 		{
 			cout << "Temperature in Celsius " << get_tC() << endl;
@@ -62,10 +63,11 @@ using namespace std;
 	int main()
 	{
 		double t;
+		TTemperature temp;
+		TTemperature temp1(15);
 		cout << "Enter temperature in Celsius\n";
 		cin >> t;
-		TTemperature temp(t);
-		TTemperature temp1(15);
+		temp.set_T(t);
 		temp.see_T();
 		temp = 5;
 		cout << endl;
