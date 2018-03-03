@@ -60,14 +60,14 @@ using namespace std;
 			cout << "Temperature in Rankin " << get_tR() << endl;
 		}
 	};
-	int main()
+	int winmain()
 	{
-		double t;
+		double a;
 		TTemperature temp;
 		TTemperature temp1(15);
 		cout << "Enter temperature in Celsius\n";
-		cin >> t;
-		temp.set_T(t);
+		cin >> a;
+		temp.set_T(a);
 		temp.see_T();
 		temp = 5;
 		cout << endl;
