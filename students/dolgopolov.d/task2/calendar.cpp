@@ -1,5 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
-#define start "Событий нет\n"
+#define Start "Событий нет\n"
 #include <clocale>
 #include <iostream>
 #include <cstring>
@@ -19,8 +19,8 @@ public:
 			y[i] = 0;
 			m[i] = 0;
 			d[i] = 0;
-			event[i] = new char[strlen(start) + 1];
-			strcpy(event[i], start);
+			event[i] = new char[strlen(Start) + 1];
+			strcpy(event[i], Start);
 		}
 		if ((n > -1) && (n < 30))
 		{
@@ -31,6 +31,8 @@ public:
 	}
 	~TCalendar()
 	{
+		for (int i = 0; i < 30; i++)
+			delete[] event[i];
 		delete[] event;
 	}
 	TCalendar& operator=(const TCalendar& obj)
@@ -43,13 +45,12 @@ public:
 			delete[] event[i];
 			event[i] = new char[strlen(obj.event[i]) + 1];
 			strcpy(event[i], obj.event[i]);
-			return *this;
 		}
+		return *this;
 	}
 	void setEvent(int n, int _year, int _month, int _day, char *str)
 	{
 		if ((n > -1) && (n < 30))
-		{
 			if ((_year > 0 && _year <= 2020) && (_month > 0 && _month <= 12) && (_day > 0 && _day <= 31))
 			{
 				y[n] = _year;
@@ -57,18 +58,14 @@ public:
 				d[n] = _day;
 				strcpy(event[n], str);
 			}
-			else
-				cout << "Некорректный ввод\n";
-		}
-		
 	}
 	
 	void getEvent(int n)
 	{
-		if ((getYear(n) == 0) || (getMonth(n) == 0) || (getDay(n) == 0))
-			cout << event[n];
+		if ((y[n] == 0) || (m[n] == 0) || (d[n] == 0))
+			cout << Start;
 		else
-			cout << y[n] << " год " << m[n] << " месяц " << d[n] << " день " << endl;
+			cout << getYear(n) << " год " << getMonth(n) << " месяц " << getDay(n) << " день " << endl;
 	}
 	void Difference(int n, int _day, int _month, int _year)
 	{
@@ -76,12 +73,59 @@ public:
 		int r_m = abs(r_d / 30);
 		int r_y = abs(r_m / 12);
 		if ((r_m > 0) && (r_y) > 0)
-			cout << "Разница составляет " << r_y << " лет " << (r_m % 12) - 1 << " месяцев " << (r_d % 30) -1 << " дней \n";
+			cout << "Разница составляет " << r_y << " лет " << (r_m % 12) << " месяцев " << (r_d % 31) -1 << " дней \n";
 		else
 			if (r_m > 0)
 				cout << "Разница составляет " << r_m << " месяцев " << (r_d % 30) - 1 << " дней \n";
 			else
 				cout << "Разница составляет " << r_d << " дней\n";
+	}
+	void moveEvent(int n, int _d, int _m, int _y, int a)
+	{
+		switch (a)
+		{
+		case 1:
+			if ((d[n]+_d) >31)
+			{
+				m[n] = m[n] + 1;
+				d[n] = (d[n]+_d) - 31;
+			}
+			else
+				d[n] = d[n] + _d;
+
+			if ((m[n] + _m) > 12)
+			{
+				y[n] = y[n] + 1;
+				m[n] = (m[n] + _m) - 12;
+			}
+			else
+				m[n] = m[n] + _m;
+			y[n] = y[n] + _y;
+
+			getEvent(n);
+		case 2:
+			
+				if ((d[n] - _d) < 1)
+				{
+					m[n] = m[n] - 1;
+					d[n] = 31 - (_d - d[n]);
+				}
+				else
+					d[n] = d[n] - _d;
+
+				if ((m[n] - _m) < 1)
+				{
+					y[n] = y[n] - 1;
+					m[n] = 12 - (_m - m[n]);
+				}
+				else
+					m[n] = m[n] - _m;
+
+				y[n] = y[n] - _y;
+
+				getEvent(n);
+			
+		}
 	}
 	int getDay(int n)
 	{
@@ -104,11 +148,13 @@ void main()
 	int y, m, d, n;
 	int a;
 	int y_d, m_d, d_d;
+	int d1, m1, y1;
+	int b;
 	char str[150];
 	setlocale(LC_ALL, "Russian");
 	class TCalendar event;
 	in:
-	cout << "1. Установить событие \n2. Узнать дату события\n3. Найти разницу между датами\n0.Выход\n";
+	cout << "1. Установить событие \n2. Узнать дату события\n3. Найти разницу между датами\n4. Сместить событие\n0.Выход\n";
 	cin >> a;
 	switch (a)
 		{
@@ -133,6 +179,16 @@ void main()
 			cout << "Введите дату, с которой нужно найти разницу (день месяц год): \n";
 			cin >> d_d >> m_d >> y_d;
 			event.Difference(n, d_d, m_d, y_d);
+			break;
+		case 4:
+			cout << "Введите номер события: \n";
+			cin >> n;
+			cout << "Введите куда вы хотите сместить дату: 1 - вперед, 2 - назад\n";
+			cin >> b;
+			cout << "Введите на сколько Вы хотите сместить дату: число месяц год:  \n";
+			cin >> d1 >> m1 >> y1;
+			event.moveEvent(n, d1, m1, y1, b);
+			break;
 		case 0:
 			break;
 		}
