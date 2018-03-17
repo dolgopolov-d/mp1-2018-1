@@ -37,7 +37,10 @@ public:
 	{
 		num = _num;
 	}
-
+	int getFunc()
+	{
+		return num;
+	}
 	void setDots(int _dot)
 	{
 		dot = _dot;
@@ -64,27 +67,27 @@ public:
 		return b;
 	}
 
-	void doSign(int _dot, double a, double b)
+	void doSign()
 	{
-		double temp = a;
+		double temp = getInter1();
 		int i;
-		for (i = 0; i < _dot; i++)
+		for (i = 0; i < getDots(); i++)
 		{
 			dotvalue[i] = temp;
 			funcvalue[i] = sign(temp);
-			temp = temp + ((b - a) / _dot);
+			temp = temp + ((getInter2() - getInter1()) / getDots());
 		}
 	}
 
-	void doQuad(int _dot, double a, double b)
+	void doQuad()
 	{
-		double temp = a;
+		double temp = getInter1();
 		int i;
-		for (i = 0; i < _dot; i++)
+		for (i = 0; i < getDots(); i++)
 		{
 			dotvalue[i] = temp;
 			funcvalue[i] = quad(temp);
-			temp = temp + ((b - a) / _dot);
+			temp = temp + ((getInter2() - getInter1()) / getDots());
 		}
 	}
 	
@@ -120,26 +123,26 @@ int main()
 	cin >> b;
 	func.setInter(a, b);
 	cout << "Интервал: от " << func.getInter1() << " до " << func.getInter2() << endl;
-	switch (n)
+	switch (func.getFunc())
 	{
 		case 1:
-			func.doSign(d, a, b);
+			func.doSign();
 			for (i = 0; i < d; i++)
 				cout << "Значение в точке " << func.getDot_value(i) << " = " << func.getFunc_value(i) << endl;
 			break;
 		case 2:
-			func.doQuad(d, a, b);
+			func.doQuad();
 			for (i = 0; i < d; i++)
 				cout << "Значение в точке " << func.getDot_value(i) << " = " << func.getFunc_value(i) << endl;
 			break;
 		case 3:
-			func.doSign(d, a, b);
+			func.doSign();
 			out.open("out.txt");
 			for (i = 0; i < d; i++)
 				out << "Значение в точке " << func.getDot_value(i) << " = " << func.getFunc_value(i) << endl;
 			break;
 		case 4:
-			func.doQuad(d, a, b);
+			func.doQuad();
 			out.open("out.txt");
 			for (i = 0; i < d; i++)
 				out << "Значение в точке " << func.getDot_value(i) << " = " << func.getFunc_value(i) << endl;
