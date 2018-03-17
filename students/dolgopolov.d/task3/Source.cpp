@@ -26,8 +26,8 @@ class TFunction
 {
 	double a;
 	double b;
-	int num;
-	double dot;
+	int num;  
+	int dot;  
 	double dotvalue[300];
 	double funcvalue[300];
 public:
@@ -46,7 +46,7 @@ public:
 		dot = _dot;
 	}
 
-	double getDots()
+	int getDots()
 	{
 		return dot;
 	}
