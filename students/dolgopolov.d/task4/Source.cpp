@@ -51,11 +51,11 @@ public:
 	}
 	int GetStartMonth(int count)
 	{
-		return date->month;
+		return date[count].month;
 	}
 	int GetStartYear(int count)
 	{
-		return date->year;
+		return date[count].year;
 	}
 	void SetCount(int _startHour, int _startMin, int _endHour, int _endMin, int count)
 	{
