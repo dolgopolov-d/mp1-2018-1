@@ -10,16 +10,16 @@ class StepCounter
 	int counter; 
 	struct Date
 	{
-		int day;
-		int month;
-		int year;
+		int day=0;
+		int month=0;
+		int year=0;
 	} *date; 
 	struct Time
 	{
-		int startHour;
-		int startMin;
-		int endHour;
-		int endMin;
+		int startHour=0;
+		int startMin=0;
+		int endHour=0;
+		int endMin=0;
 	} *time; 
 public:
 	StepCounter(int _counter = 0)
@@ -31,15 +31,20 @@ public:
 	}
 	~StepCounter()
 	{
-		delete Steps;
-		delete date;
-		delete time;
+		delete[] Steps;
+		delete[] date;
+		delete[] time;
 	}
-	void SetSteps(int count,int _steps)
+	
+	void SetSteps(int count,int _steps=0)
 	{
 		Steps[count] = _steps;
 	}
-	void SetStartDate(int _day, int _month, int _year, int count)
+	int GetSteps(int count)
+	{
+		return Steps[count];
+	}
+	void SetStartDate(int count, int _day=0, int _month=0, int _year=0)
 	{
 		date[count].day = _day;
 		date[count].month = _month;
@@ -101,10 +106,12 @@ public:
 
 	}
 };
+
 int main()
 {
 	setlocale(LC_ALL, "Russian");
 	int temp;
+	int j;
 	int i;
 	int day, month, year;
 	int stHour;
@@ -115,17 +122,47 @@ int main()
 	cout << "¬ведите сколько всего будет подсчетов:\n";
 	cin >> temp;
 	StepCounter of(temp);
-	cout << "¬ведите номер подсчета: (1 - " << temp << ")\n";
-	cin >> i;
-	cout << "¬ведите дату:(день, мес€ц, год)\n";
-	cin >> day >> month >> year;
-	of.SetStartDate(day, month, year, i);
-	cout << "¬ведите врем€: (час начала, минуты начала, час конца, минуты конца)\n";
-	cin >> stHour >> stMin >> enHour >> enMin;
-	of.SetCount(stHour, stMin, enHour, enMin, i);
-	cout << "¬ведите кол-во шагов:\n";
-	cin >> stepCount;
-	of.SetSteps(i, stepCount);
-
-
+	in:cout << "¬ведите действие:\n1.¬вести подсчет\n2.”знать дату подсчета\n3.”знать информацию о подсчете\n4.—реднее число шагов в выбранном мес€це\n0.¬ыход\n";
+	cin >> j;
+	switch (j)
+	{
+	case 1:
+		cout << "¬ведите номер подсчета: (1 - " << temp << ")\n";
+		cin >> i;
+		cout << "¬ведите дату:(день, мес€ц, год)\n";
+		cin >> day >> month >> year;
+		of.SetStartDate(i, day, month, year);
+		cout << "¬ведите врем€: (час начала, минуты начала, час конца, минуты конца)\n";
+		cin >> stHour >> stMin >> enHour >> enMin;
+		of.SetCount(stHour, stMin, enHour, enMin, i);
+		cout << "¬ведите кол-во шагов:\n";
+		cin >> stepCount;
+		of.SetSteps(i, stepCount);
+		goto in;
+		break;
+	case 2:
+		cout << "¬ведите номер подсчета: (1 - " << temp << ")\n";
+		cin >> i;
+		if ((of.GetStartDay(i) == 0) && (of.GetStartMonth(i) == 0) && (of.GetStartYear(i) == 0))
+			cout << "ƒата не задана" << endl << endl;
+		else
+			cout << "ƒата: " << of.GetStartDay(i) << "." << of.GetStartMonth(i) << "." << of.GetStartYear(i) << endl << endl;
+		goto in;
+		break;
+	case 3:
+		cout << "¬ведите номер подсчета: (1 - " << temp << ")\n";
+		cin >> i;
+		if ((of.GetStartHour(i) == 0) && (of.GetStartMin(i) == 0) && (of.GetEndHour(i) == 0) && (of.GetEndMin(i) == 0))
+			cout << "ѕодсчет не задан" << endl << endl;
+		else
+		{
+			cout << "¬рем€: " << of.GetStartHour(i) << ":" << of.GetStartMin(i) << " - " << of.GetEndHour(i) << ":" << of.GetEndMin(i) << endl << endl;
+			cout << "Ўагов: " << of.GetSteps(i) << endl << endl;
+		}
+		goto in;
+		break;
+	case 0:
+		break;
+	}
+	system("pause");
 }
