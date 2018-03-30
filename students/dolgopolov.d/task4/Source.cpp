@@ -35,46 +35,50 @@ public:
 		delete date;
 		delete time;
 	}
-	void SetStartDate(int _day, int _month, int _year)
+	void SetSteps(int count,int _steps)
 	{
-		date->day = _day;
-		date->month = _month;
-		date->year = _year;
+		Steps[count] = _steps;
 	}
-	int GetStartDay()
+	void SetStartDate(int _day, int _month, int _year, int count)
 	{
-		return date->day;
+		date[count].day = _day;
+		date[count].month = _month;
+		date[count].year = _year;
 	}
-	int GetStartMonth()
+	int GetStartDay(int count)
+	{
+		return date[count].day;
+	}
+	int GetStartMonth(int count)
 	{
 		return date->month;
 	}
-	int GetStartYear()
+	int GetStartYear(int count)
 	{
 		return date->year;
 	}
-	void SetCount(int _startHour, int _startMin, int _endHour, int _endMin)
+	void SetCount(int _startHour, int _startMin, int _endHour, int _endMin, int count)
 	{
-		time->startHour = _startHour;
-		time->startMin = _startMin;
-		time->endHour = _endHour;
-		time->endMin = _endMin;
+		time[count].startHour = _startHour;
+		time[count].startMin = _startMin;
+		time[count].endHour = _endHour;
+		time[count].endMin = _endMin;
 	}
-	int GetStartHour()
+	int GetStartHour(int count)
 	{
-		return time->startHour;
+		return time[count].startHour;
 	}
-	int GetStartMin()
+	int GetStartMin(int count)
 	{
-		return time->startMin;
+		return time[count].startMin;
 	}
-	int GetEndHour()
+	int GetEndHour(int count)
 	{
-		return time->endHour;
+		return time[count].endHour;
 	}
-	int GetEndMin()
+	int GetEndMin(int count)
 	{
-		return time->endMin;
+		return time[count].endMin;
 	}
 	int AverageStepsMonth()
 	{
@@ -101,11 +105,27 @@ int main()
 {
 	setlocale(LC_ALL, "Russian");
 	int temp;
-	int NOF;
-	StepCounter of;
-	cout << "¬ведите номер подсчета шагов:\n";
+	int i;
+	int day, month, year;
+	int stHour;
+	int stMin;
+	int enHour;
+	int enMin;
+	int stepCount;
+	cout << "¬ведите сколько всего будет подсчетов:\n";
 	cin >> temp;
-	NOF++;
+	StepCounter of(temp);
+	cout << "¬ведите номер подсчета: (1 - " << temp << ")\n";
+	cin >> i;
+	cout << "¬ведите дату:(день, мес€ц, год)\n";
+	cin >> day >> month >> year;
+	of.SetStartDate(day, month, year, i);
+	cout << "¬ведите врем€: (час начала, минуты начала, час конца, минуты конца)\n";
+	cin >> stHour >> stMin >> enHour >> enMin;
+	of.SetCount(stHour, stMin, enHour, enMin, i);
+	cout << "¬ведите кол-во шагов:\n";
+	cin >> stepCount;
+	of.SetSteps(i, stepCount);
 
 
 }
