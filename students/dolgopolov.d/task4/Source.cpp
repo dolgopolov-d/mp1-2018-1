@@ -1,11 +1,15 @@
 #include <iostream>
 #include <stdio.h>
 #include <locale.h>
+#include <fstream>
+#include <string>
 
 using namespace std;
 
 class StepCounter
 {
+	ifstream in;
+	ofstream out;
 	int *Steps; 
 	int counter; 
 	struct Date
@@ -37,7 +41,7 @@ public:
 		delete[] time;
 	}
 	
-	void SetSteps(int count,int _steps=0)
+	void SetSteps(int count, int _steps = 0)
 	{
 		Steps[count] = _steps;
 	}
@@ -47,7 +51,7 @@ public:
 		return Steps[count];
 	}
 
-	void SetStartDate(int count, int _day=0, int _month=0, int _year=0)
+	void SetStartDate(int count, int _day = 0, int _month = 0, int _year = 0)
 	{
 		date[count].day = _day;
 		date[count].month = _month;
@@ -166,14 +170,44 @@ public:
 				}
 		return dateOfMax;
 	}
-	void SaveToFile()
-	{
 
+	void SaveToFile(int _count)
+	{
+		int i=0;
+		out.open("C:/Test/out.txt");
+		do
+		{
+			out << Steps[i] << endl << date[i].day << endl << date[i].month << endl << date[i].year << endl << time[i].startHour << endl << time[i].startMin << endl << time[i].endHour << endl << time[i].endMin << endl;
+			i++;
+		} while (date[i].day && date[i].month && date[i].year != 0);
+		out.close();
 	}
 
-	void GetFromFile()
+	void GetFromFile(int _count)
 	{
-
+		int i;
+		char temp[200];
+		in.open("C:/Test/out.txt");
+		for (i = 0; i < _count; i++)
+		{
+			in.getline(temp, 200, '\n');
+			Steps[i] = atoi(temp);
+			in.getline(temp, 200, '\n');
+			date[i].day = atoi(temp);
+			in.getline(temp, 200, '\n');
+			date[i].month = atoi(temp);
+			in.getline(temp, 200, '\n');
+			date[i].year = atoi(temp);
+			in.getline(temp, 200, '\n');
+			time[i].startHour = atoi(temp);
+			in.getline(temp, 200, '\n');
+			time[i].startMin = atoi(temp);
+			in.getline(temp, 200, '\n');
+			time[i].endHour = atoi(temp);
+			in.getline(temp, 200, '\n');
+			time[i].endMin = atoi(temp);
+		}
+		in.close();
 	}
 };
 
@@ -189,23 +223,40 @@ void main()
 	int stMin;
 	int enHour;
 	int enMin;
-	int stepCount;
+	int stepCount = 0;
 	int user_month;
+	ofstream out;
+	ifstream in;
 	cout << "Введите сколько всего будет подсчетов:\n";
 	cin >> temp;
 	StepCounter of(temp);
-	in:cout << "Введите действие:\n1.Ввести подсчет\n2.Узнать дату подсчета\n3.Узнать информацию о подсчете\n4.Среднее число шагов в выбранном месяце\n5.Найти максимальное количество шагов в выбранном месяце\n6.Узнать среднее количетсов шагов в выбранный день недели\n0.Выход\n";
+	in:cout << "Введите действие:\n1.Ввести подсчет\n2.Узнать дату подсчета\n3.Узнать информацию о подсчете\n4.Среднее число шагов в выбранном месяце\n5.Найти максимальное количество шагов в выбранном месяце\n6.Узнать среднее количетсов шагов в выбранный день недели\n7.Сохранить данные в файл\n8.Загрузить данные из файла0.Выход\n";
 	cin >> j;
 	switch (j)
 	{
 	case 1:
 		cout << "Введите номер подсчета: (0 - " << temp - 1 << ")\n";
 		cin >> i;
+		if (i >= temp)
+		{
+			cout << "Некорректный ввод" << endl;
+			goto in;
+		}
 		cout << "Введите дату:(день, месяц, год)\n";
 		cin >> day >> month >> year;
+		if ((day > 31) || (month > 12))
+		{
+			cout << "Некорректный ввод" << endl;
+			goto in;
+		}
 		of.SetStartDate(i, day, month, year);
 		cout << "Введите время: (час начала, минуты начала, час конца, минуты конца)\n";
 		cin >> stHour >> stMin >> enHour >> enMin;
+		if ((stHour >= 24) || (stMin >= 60) || (enHour >= 24) || (enMin >= 60))
+		{
+			cout << "Некорректный ввод" << endl;
+			goto in;
+		}
 		of.SetCount(stHour, stMin, enHour, enMin, i);
 		cout << "Введите кол-во шагов:\n";
 		cin >> stepCount;
@@ -255,15 +306,23 @@ void main()
 		goto in;
 		break;
 	case 6:
-		cout << "Введите нужный день недели:(1 - Понедельник, 2 - Вторник, 3 - Среда, 4 - Четверг, 5 - Пятница, 6 - Суббота, 0 - Воскресенье" << endl;
+		cout << "Введите нужный день недели:\n1 - Понедельник\n2 - Вторник\n3 - Среда\n4 - Четверг\n5 - Пятница\n6 - Суббота\n0 - Воскресенье" << endl;
 		cin >> user_dayOfWeek;
 		if (user_dayOfWeek >= 7)
 			cout << "Неверный ввод" << endl;
 		else
 			if (of.AverageStepsDay(user_dayOfWeek) == 0)
-				cout << "Неверный ввод" << endl;
+				cout << "Нет шагов" << endl;
 			else 
 				cout << "Среднее число шагов в выбранный день: " << of.AverageStepsDay(user_dayOfWeek) << endl;
+		goto in;
+		break;
+	case 7:
+		of.SaveToFile(temp);
+		goto in;
+		break;
+	case 8:
+		of.GetFromFile(temp);
 		goto in;
 		break;
 	case 0:
