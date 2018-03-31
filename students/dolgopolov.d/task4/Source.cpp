@@ -244,7 +244,7 @@ void main()
 		}
 		cout << "Введите дату:(день, месяц, год)\n";
 		cin >> day >> month >> year;
-		if ((day > 31) || (month > 12))
+		if ((day > 31) || (month > 12) || (day <= 0) || (month <= 0))
 		{
 			cout << "Некорректный ввод" << endl;
 			goto in;
