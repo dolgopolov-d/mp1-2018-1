@@ -3,7 +3,6 @@
 #include <locale.h>
 #include <fstream>
 #include <string>
-#include <windows.h>
 #define counts 20
 
 
@@ -56,85 +55,57 @@ public:
 		stDate.stYear = _year;
 	}
 
-	int GetStDay()
+	int GetStDate(int i)
 	{
-		return stDate.stDay;
+		switch (i)
+		{
+		case 1:
+			return stDate.stDay;
+		case 2:
+			return stDate.stMonth;
+		case 3:
+			return stDate.stYear;
+		}
 	}
 
-	int GetStMonth()
-	{
-		return stDate.stMonth;
-	}
-
-	int GetStYear()
-	{
-		return stDate.stYear;
-	}
-
-	void SetSteps(int count, int _steps)
+	void SetCountInfo(int count, int _steps, int _startHour, int _startMin, int _endHour, int _endMin, int _day = 0, int _month = 0, int _year = 0)
 	{
 		int i;
 		for (i = 0; i < counts; i++)
 			Steps[i] = 0;
 		Steps[count] = _steps;
-	}
-
-	int GetSteps(int count)
-	{
-		return Steps[count];
-	}
-
-	void SetDate(int count, int _day = 0, int _month = 0, int _year = 0)
-	{
 		date[count].day = _day;
 		date[count].month = _month;
 		date[count].year = _year;
-	}
-
-	int GetDay(int count)
-	{
-		return date[count].day;
-	}
-
-	int GetMonth(int count)
-	{
-		return date[count].month;
-	}
-
-	int GetYear(int count)
-	{
-		return date[count].year;
-	}
-
-	void SetStTime(int _startHour, int _startMin, int count)
-	{
 		time[count].startHour = _startHour;
 		time[count].startMin = _startMin;
-	}
-
-	void SetEndTime(int _endHour, int _endMin, int count)
-	{
 		time[count].endHour = _endHour;
 		time[count].endMin = _endMin;
 	}
-	int GetStartHour(int count)
-	{
-		return time[count].startHour;
-	}
 
-	int GetStartMin(int count)
+	int GetCountInfo(int count, int i)
 	{
-		return time[count].startMin;
-	}
-
-	int GetEndHour(int count)
-	{
-		return time[count].endHour;
-	}
-
-	int GetEndMin(int count)
-	{
-		return time[count].endMin;
+		switch (i)
+		{
+		case 1:
+			return Steps[count];
+		case 2:
+			return date[count].day;
+		case 3:
+			return date[count].month;
+		case 4:
+			return date[count].year;
+		case 5:
+			return time[count].startHour;
+		case 6:
+			return time[count].startMin;
+		case 7:
+			return time[count].endHour;
+		case 8:
+			return time[count].endMin;
+		case 0:
+			return 0;
+		}
 	}
 
 	int AverageStepsMonth(int _month)
@@ -181,18 +152,7 @@ public:
 			return (temp / count);
 	}
 
-	int MaxSteps(int _month)
-	{
-		int tempMax = 0;
-		int i;
-		for (i = 0; i < counts; i++)
-			if (date[i].month == _month)
-				if (Steps[i] > tempMax)
-					tempMax = Steps[i];
-		return tempMax;
-	}
-
-	int MaxStepsDate(int _month)
+	int MaxSteps(int _month, int j)
 	{
 		int dateOfMax = 0;
 		int tempMax = 0;
@@ -204,7 +164,13 @@ public:
 					tempMax = Steps[i];
 					dateOfMax = i;
 				}
-		return dateOfMax;
+		switch (j)
+		{
+			case 1:
+				return tempMax;
+			case 2:
+				return dateOfMax;
+		}
 	}
 
 	void SaveToFile()
@@ -212,7 +178,7 @@ public:
 		int i;
 		out.open("C:/Test/out.txt");
 		for (i=0; i<counts; i++)
-			out << stDate.stDay << endl << stDate.stMonth << endl << stDate.stYear << endl <<Steps[i] << endl << date[i].day << endl << date[i].month << endl << date[i].year << endl << time[i].startHour << endl << time[i].startMin << endl << time[i].endHour << endl << time[i].endMin << endl;
+			out << stDate.stDay << endl << stDate.stMonth << endl << stDate.stYear << endl << Steps[i] << endl << time[i].startHour << endl << time[i].startMin << endl << time[i].endHour << endl << time[i].endMin << endl << date[i].day << endl << date[i].month << endl << date[i].year << endl;
 		out.close();
 	}
 
@@ -232,12 +198,6 @@ public:
 			in.getline(temp, 200, '\n');
 			Steps[i] = atoi(temp);
 			in.getline(temp, 200, '\n');
-			date[i].day = atoi(temp);
-			in.getline(temp, 200, '\n');
-			date[i].month = atoi(temp);
-			in.getline(temp, 200, '\n');
-			date[i].year = atoi(temp);
-			in.getline(temp, 200, '\n');
 			time[i].startHour = atoi(temp);
 			in.getline(temp, 200, '\n');
 			time[i].startMin = atoi(temp);
@@ -245,6 +205,12 @@ public:
 			time[i].endHour = atoi(temp);
 			in.getline(temp, 200, '\n');
 			time[i].endMin = atoi(temp);
+			in.getline(temp, 200, '\n');
+			date[i].day = atoi(temp);
+			in.getline(temp, 200, '\n');
+			date[i].month = atoi(temp);
+			in.getline(temp, 200, '\n');
+			date[i].year = atoi(temp);
 		}
 		in.close();
 	}
@@ -257,7 +223,14 @@ void main()
 	int j;
 	int i;
 	int k;
-	SYSTEMTIME date_start, date_end;
+	int steps;
+	int day;
+	int month;
+	int year;
+	int startHour;
+	int startMin;
+	int endHour;
+	int endMin;
 	int startDay, startMonth, startYear;
 	int stepCount = 0;
 	int user_month;
@@ -284,34 +257,65 @@ void main()
 			cout << "Некорректный ввод" << endl;
 			goto in;
 		}
-		op:cout << "Введите нужное дейтвие:\n1.Начать подсчет\n2.Закончить подсчет\n";
-		cin >> k;
-		switch (k)
+		cout << "Введите количество шагов: ";
+		cin >> steps;
+		_day: cout << "Введите день подсчета: ";
+		cin >> day;
+		if ((day <= 0) || (day > 31))
 		{
-		case 1:
-			GetLocalTime(&date_start);
-			of.SetDate(i, date_start.wDay, date_start.wMonth, date_start.wYear);
-			of.SetStTime(date_start.wHour, date_start.wMinute, i);
-			cout << "Начало движения: " << date_start.wDay << "." << date_start.wMonth << "." << date_start.wYear << endl << date_start.wHour << ":" << date_start.wMinute << endl;
-			goto op;
-			break;
-		case 2:
-			GetLocalTime(&date_end);
-			of.SetEndTime(date_end.wHour, date_end.wMinute, i);
-			cout << "Конец движения: " << date_end.wDay << "." << date_end.wMonth << "." << date_end.wYear << endl << date_end.wHour << ":" << date_end.wMinute << endl;
-			break;
+			cout << "Неверный ввод" << endl;
+			goto _day;
 		}
-		cout << "Введите кол-во шагов:\n";
-		cin >> stepCount;
-		of.SetSteps(i, stepCount);
-		system("cls");
+		_month:cout << "Введите месяц подсчета: ";
+		cin >> month;
+		if ((month <= 0) || (month > 12))
+		{
+			cout << "Неверный ввод" << endl;
+			goto _month;
+		}
+		_year:cout << "Введите год подсчета ";
+		cin >> year;
+		if (year <= 0)
+		{
+			cout << "Неверный ввод" << endl;
+			goto _year;
+		}
+		_startHour:cout << "Введите часы начала подсчета: ";
+		cin >> startHour;
+		if ((startHour < 0) || (startHour > 23))
+		{
+			cout << "Неверный ввод" << endl;
+			goto _startHour;
+		}
+		_startMin:cout << "Введите минуты начала подсчета: ";
+		cin >> startMin;
+		if ((startMin < 0) || (startMin > 59))
+		{
+			cout << "Неверный ввод" << endl;
+			goto _startMin;
+		}
+		_endHour:cout << "Введите часы конца подсчета: ";
+		cin >> endHour;
+		if ((endHour < 0) || (endHour > 23))
+		{
+			cout << "Неверный ввод" << endl;
+			goto _endHour;
+		}
+		_endMin:cout << "Введите минуты конца подсчета: ";
+		cin >> endMin;
+		if ((endMin < 0) || (endMin > 59))
+		{
+			cout << "Неверный ввод" << endl;
+			goto _endMin;
+		}
+		of.SetCountInfo(i, steps, startHour, startMin, endHour, endMin, day, month, year);
 		goto in;
 		break;
 	case 2:
-		if ((of.GetStDay() == 0) && (of.GetStMonth() == 0) && (of.GetStYear() == 0))
+		if ((of.GetStDate(1) == 0) && (of.GetStDate(2) == 0) && (of.GetStDate(3) == 0))
 			cout << "Дата не задана" << endl << endl;
 		else
-			cout << "Дата: " << of.GetStDay() << "." << of.GetStMonth() << "." << of.GetStYear() << endl << endl;
+			cout << "Дата: " << of.GetStDate(1) << "." << of.GetStDate(2) << "." << of.GetStDate(3) << endl << endl;
 		goto in;
 		break;
 	case 3:
@@ -322,18 +326,44 @@ void main()
 			cout << "Некорректный ввод" << endl;
 			goto in;
 		}
-		if ((of.GetStartHour(i) == 0) && (of.GetStartMin(i) == 0) && (of.GetEndHour(i) == 0) && (of.GetEndMin(i) == 0))
-			cout << "Подсчет не задан" << endl << endl;
-		else
-			if ((of.GetDay(i) == 0) && (of.GetMonth(i) == 0) && (of.GetYear(i) == 0))
-				cout << "Дата не задана" << endl << endl;
-			else
-			{
-				cout << "Дата: " << of.GetDay(i) << "." << of.GetMonth(i) << "." << of.GetYear(i) << endl;
-				cout << "Время: " << of.GetStartHour(i) << ":" << of.GetStartMin(i) << " - " << of.GetEndHour(i) << ":" << of.GetEndMin(i) << endl;
-				cout << "Шагов: " << of.GetSteps(i) << endl << endl;
-			}
-		goto in;
+		info:cout << "1.Количество шагов\n2.День подсчета\n3.Месяц подсчета\n4.Год подсчета\n5.Часы начала подсчета\n6.Минуты начала подсчета\n7.Часы окончания подсчета\n8.Минуты окончания подсчета\n0.Выход\n";
+		cin >> k;
+		switch (k)
+		{
+			case 1:
+				cout << "Шаги: " << endl;
+				break;
+			case 2:
+				cout << "День: " << endl;
+				break;
+			case 3:
+				cout << "Месяц: " << endl;
+				break;
+			case 4:
+				cout << "Год: " << endl;
+				break;
+			case 5:
+				cout << "Час начала: " << endl;
+				break;
+			case 6:
+				cout << "Минута начала: " << endl;
+				break;
+			case 7:
+				cout << "Час окончания: " << endl;
+				break;
+			case 8:
+				cout << "Минута окончания: " << endl;
+				break;
+			case 0:
+				break;
+		}
+		if (k != 0)
+		{
+			cout << of.GetCountInfo(i, k) << endl;
+			goto info;
+		}
+		if (k == 0)
+			goto in;
 		break;
 	case 4:
 		cout << "Введите месяц(1-12): \n";
@@ -353,7 +383,7 @@ void main()
 		if (user_month == 0)
 			cout << "Неверный ввод\n";
 		else
-			cout << "Максимальное количество шагов в этом месяце: " << of.MaxSteps(user_month) << endl << "Дата: " << of.GetDay(of.MaxStepsDate(user_month)) << "." << of.GetMonth(of.MaxStepsDate(user_month)) << "." << of.GetYear(of.MaxStepsDate(user_month)) << endl << endl;
+			cout << "Максимальное количество шагов в этом месяце: " << of.MaxSteps(user_month, 1) << endl << "Дата: " << of.GetCountInfo(of.MaxSteps(user_month, 2), 2) << "." << of.GetCountInfo(of.MaxSteps(user_month, 2), 3) << "." << of.GetCountInfo(of.MaxSteps(user_month, 2), 4) << endl << endl;
 		goto in;
 		break;
 	case 6:
