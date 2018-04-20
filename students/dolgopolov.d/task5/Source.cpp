@@ -39,13 +39,17 @@ protected:
 	vector <bool> occupied_trainLastoch_place;
 	vector <bool> occupied_trainFirm_place;
 	vector <bool> occupied_trainScor_place;
+	vector <bool> is_in_order_trainLastoch_place;
+	vector <bool> is_in_order_trainFirm_place;
+	vector <bool> is_in_order_trainScor_place;
 public:
-	GorRailWay() :trainLastoch_place(101), trainFirm_place(119), trainScor_place(119), trainLastoch_carriage(8), trainFirm_carriage(12), trainScor_carriage(12), occupied_trainLastoch_place(101), occupied_trainFirm_place(119), occupied_trainScor_place(119) // lastoch_place - 1-100 сидячие, firm_place/scor_place - 1-27 плацкарт верхние, 28-54 плацкарт нижние, 55-72 - купе верхние, 73 - 100 - купе нижние, 101 - 118 - СВ
+	GorRailWay() :trainLastoch_place(101), trainFirm_place(119), trainScor_place(119), trainLastoch_carriage(8), trainFirm_carriage(12), trainScor_carriage(12), occupied_trainLastoch_place(101), occupied_trainFirm_place(119), occupied_trainScor_place(119), is_in_order_trainLastoch_place(101), is_in_order_trainFirm_place(119), is_in_order_trainScor_place(119) // lastoch_place - 1-100 сидячие, firm_place/scor_place - 1-27 плацкарт верхние, 28-54 плацкарт нижние, 55-72 - купе верхние, 73 - 100 - купе нижние, 101 - 118 - СВ
 	{
 		for (int i = 1; i < 101; i++)
 		{
 			trainLastoch_place[i] = "Свободно";
 			occupied_trainLastoch_place[i] = false;
+			is_in_order_trainLastoch_place[i] = false;
 		}
 
 		for (int i = 1; i < 119; i++)
@@ -102,26 +106,39 @@ public:
 		}
 	}
 
-	void SetPlace(int i)
+	bool IsInOrder(int i, int place)
 	{
-		switch (obj.train_type)
+		switch (i)
 		{
 		case 1:
-			obj.trainLastoch_place[i] = "Занято";
-			obj.occupied_trainLastoch_place[i] = true;
+			return obj.is_in_order_trainLastoch_place[place];
+		case 2:
+			return obj.is_in_order_trainFirm_place[place];
+		case 3:
+			return obj.is_in_order_trainScor_place[place];
+		}
+	}
+
+	void SetPlace(int i, int place)
+	{
+		switch (i)
+		{
+		case 1:
+			obj.trainLastoch_place[place] = "Занято";
+			obj.occupied_trainLastoch_place[place] = true;
 			break;
 		case 2:
-			obj.trainFirm_place[i] = "Занято";
-			obj.occupied_trainFirm_place[i] = true;
+			obj.trainFirm_place[place] = "Занято";
+			obj.occupied_trainFirm_place[place] = true;
 			break;
 		case 3:
-			obj.trainScor_place[i] = "Занято";
-			obj.occupied_trainScor_place[i] = true;
+			obj.trainScor_place[place] = "Занято";
+			obj.occupied_trainScor_place[place] = true;
 			break;
 		}
 	}
 	
-	vector<int> Checker(int i) 
+	vector<int> Places(int i) 
 	{
 		vector <int> places;
 		switch (i)
@@ -150,14 +167,17 @@ public:
 		case 1:
 			obj.trainLastoch_place[place] = "Занято";
 			obj.occupied_trainLastoch_place[place] = true;
+			obj.is_in_order_trainLastoch_place[place] = true;
 			break;
 		case 2:
 			obj.trainFirm_place[place] = "Занято";
 			obj.occupied_trainFirm_place[place] = true;
+			obj.is_in_order_trainFirm_place[place] = true;
 			break;
 		case 3:
 			obj.trainScor_place[place] = "Занято";
 			obj.occupied_trainScor_place[place] = true;
+			obj.is_in_order_trainScor_place[place] = true;
 			break;
 		}
 	}
@@ -188,43 +208,24 @@ void main()
 	GorRailWay ex1;
 	ticket t;
 	passengers_data p;
+	vector<int> k1, k2, k3;
 	int i;
 	int amount;
 	int j;
+	int count = 0;
 	cout << "Введите дату поездки:\n";
 	cin >> p.date;
-	cout << "Введите нужный тип поезда:(1-Ласточка, 2-Фирменный, 3-Скорый)\n";
-	cin >> p.train_type;
-	switch (p.train_type)
-	{
-	case 1:
-		cout << "Доступны только сидячие места\n";
-		//p.carriage_type = 4;
-		break;
-	case 2:
-		cout << "Доступны плацкартные вагоны, купейные и СВ\n";
-		//cout << "Введите нужный тип вагона: (1 - плацкартные, 2 - купейные, 3 - СВ)\n";
-		//cin >> p.carriage_type;
-		break;
-	case 3:
-		cout << "Доступны плацкартные вагоны, купейные и СВ\n";
-		//cout << "Введите нужный тип вагона: (1 - плацкартные, 2 - купейные, 3 - СВ)\n";
-		//cin >> p.carriage_type;
-		break;
-	}
-	cout << "Введите количество билетов:\n";
-	cin >> amount;
 	cout << "Введите ФИО:\n";
 	cin >> p.user_data;
-	in:cout << "1. Проверка свободных мест\n2. Создать заказ\n3. Рассчитать стоимость билетов\n4. Отменить заказ\n5. Сформировать билеты\n0. Выход\n";
+	in:cout << "1. Проверка свободных мест\n2. Создать заказ\n3. Рассчитать стоимость билетов\n4. Отменить заказ\n5. Сформировать билеты\n6. Билеты в заказе\n0. Выход\n";
 	cin >> i;
 	switch (i)
 	{
 	case 1:
 		cout << "Выберите тип поезда:\n";
 		cin >> j;
-		for (i = 0; i < ex.Checker(j).size(); i++)
-			cout << "Место " << ex.Checker(j)[i] << " - " << ex.GetPlaceStatus(j, i+1) << endl;
+		for (i = 0; i < ex.Places(j).size(); i++)
+			cout << "Место " << ex.Places(j)[i] << " - " << ex.GetPlaceStatus(j, i+1) << endl;
 		goto in;
 		break;
 	case 2:
@@ -257,7 +258,51 @@ void main()
 		cin >> j;
 		cout << "Введите номер места:\n";
 		cin >> p.place_number;
+		if (ex.IsInOrder(j, p.place_number) == false)
+		{
+			cout << "Это не ваш заказ\n";
+			goto in;
+			break;
+		}
 		ex.CancelOrder(j, p.place_number);
+		goto in;
+		break;
+	case 6:
+		for (i = 1; i < 101; i++)
+			if (ex.IsInOrder(1, i) == true)
+			{
+				count++;
+				k1.push_back(i);
+			}
+		for (i = 1; i<119; i++)
+			if (ex.IsInOrder(2, i) == true)
+			{
+				count++;
+				k2.push_back(i);
+			}
+		for (i = 1; i<119; i++)
+			if (ex.IsInOrder(3, i) == true)
+			{
+				count++;
+				k3.push_back(i);
+			}
+		cout << count << " билета(-ов) в заказе \n\n";
+		cout << "В Ласточке заказаны место(-а): \n";
+			for (i = 0; i < k1.size(); i++)
+				cout << k1[i] << "  ";
+			cout << endl;
+		cout << "В Фирменном заказаны место(-а): \n";
+			for (i = 0; i < k2.size(); i++)
+				cout << k2[i] << "  ";
+			cout << endl;
+		cout << "В Скором заказаны место(-а): \n";
+		for (i = 0; i < k3.size(); i++)
+				cout << k3[i] << "  ";
+			cout << endl;
+		count = 0;
+		k1.clear();
+		k2.clear();
+		k3.clear();
 		goto in;
 		break;
 	case 0:
