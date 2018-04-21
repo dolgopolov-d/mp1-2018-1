@@ -19,7 +19,9 @@ struct ticket
 	int train_number = 0;
 	int carriage_number = 0;
 	int place_number = 0;
-	string user_data = "0";
+	string user_data_name = "0";
+	string user_data_surname = "0";
+	string user_data_patronymic = "0";
 	string departure_station = "0";
 	string arrival_station = "0";
 }t;
@@ -27,6 +29,7 @@ struct passengers_data
 {
 	string date = "0";
 	int train_type = 0; // 1 - Ласточка 2 - Фирменный 3 - Скорый
+	int carriage_type = 0; // 1 - плацкарт, 2 - купе, 3 - СВ, 4 - сидячий
 	int l_place_amount = 0;
 	int f_plac_place_amount = 0;
 	int f_comp_place_amount = 0;
@@ -34,7 +37,9 @@ struct passengers_data
 	int s_plac_place_amount = 0;
 	int s_comp_place_amount = 0;
 	int s_SV_place_amount = 0;
-	string user_data = "0";
+	string user_data_name = "0";
+	string user_data_surname = "0";
+	string user_data_patronymic = "0";
 }p;
 
 class GorRailWay 
@@ -76,10 +81,11 @@ class RailWayStation
 public:
 	RailWayStation()
 	{}
-	void SetPassengersData(string _date, int _train_type, int l_place_amount, int f_plac_place_amount, int f_comp_place_amount, int f_SV_place_amount, int s_plac_place_amount, int s_comp_place_amount, int s_SV_place_amount, string _user_data)
+	void SetPassengersData(string _date, int _train_type, int _carriage_type, int l_place_amount, int f_plac_place_amount, int f_comp_place_amount, int f_SV_place_amount, int s_plac_place_amount, int s_comp_place_amount, int s_SV_place_amount, string _user_data_name, string _user_data_surname, string _user_data_patronymic)
 	{
 		p.date = _date;
 		p.train_type = _train_type;
+		p.carriage_type = _carriage_type;
 		p.l_place_amount = l_place_amount;
 		p.f_plac_place_amount = f_plac_place_amount;
 		p.f_comp_place_amount = f_comp_place_amount;
@@ -87,15 +93,19 @@ public:
 		p.s_plac_place_amount = s_plac_place_amount;
 		p.s_comp_place_amount = s_comp_place_amount;
 		p.s_SV_place_amount = s_SV_place_amount;
-		p.user_data = _user_data;
+		p.user_data_name = _user_data_name;
+		p.user_data_surname = _user_data_surname;
+		p.user_data_patronymic = _user_data_patronymic;
 	}
 
-	void SetTicketsData(string _date, int _train_number, int _carriage_number, string _user_data)
+	void SetTicketsData(string _date, int _train_number, int _carriage_number, string _user_data_name, string _user_data_surname, string _user_data_patronymic)
 	{
 		t.date = _date;
 		t.train_number = _train_number;
 		t.carriage_number = _carriage_number;
-		t.user_data = _user_data;
+		t.user_data_name = _user_data_name;
+		t.user_data_surname = _user_data_surname;
+		t.user_data_patronymic = _user_data_patronymic;
 	}
 	string GetPlaceStatus(int i, int place)
 	{
@@ -226,22 +236,80 @@ void main()
 	setlocale(LC_ALL, "Russian");
 	RailWayStation ex;
 	GorRailWay ex1;
-	string date, user_data;
+	string date, user_data_name, user_data_surname, user_data_patronymic;
 	vector<int> k1, k2, k3;
-	int i;
+	bool from_Moscow;
+	int i, j;
 	int place;
-	int train_type;
+	int train_type, carriage_type;
 	int count = 0;
 	int count_l = 0, count_f_plac = 0, count_f_comp = 0, count_f_SV = 0, count_s_plac = 0, count_s_comp = 0, count_s_SV = 0;
 	int temp_count_l = 0, temp_count_f_plac = 0, temp_count_f_comp = 0, temp_count_f_SV = 0, temp_count_s_plac = 0, temp_count_s_comp = 0, temp_count_s_SV = 0;
-	cout << "Введите дату поездки:\n";
+	cout << "Введите дату поездки(день.месяц.год):\n";
 	cin >> date;
-	cout << "Введите ФИО:\n";
-	cin >> user_data;
-	on:cout << "Выберите тип поезда:\n";
+	q:cout << "Куда Вы едете: \n1.В Москву\n2.В Нижний Новгород\n";
+	cin >> j;
+	if ((j != 1) && (j != 2))
+	{
+		cout << "Неверный ввод\n";
+		goto q;
+	}
+	if (j == 2)
+		from_Moscow = true;
+	else
+		from_Moscow = false;
+	if (from_Moscow == true)
+	{
+		t.departure_station = "Москва";
+		t.arrival_station = "Нижний Новгород";
+	}
+	else
+	{
+		t.departure_station = "Нижний Новгород";
+		t.arrival_station = "Москва";
+	}
+	cout << "Введите имя:\n";
+	cin >> user_data_name;
+	cout << "Введите фамилию:\n";
+	cin >> user_data_surname;
+	cout << "Введите отчетсво:\n";
+	cin >> user_data_patronymic;
+	on:cout << "Выберите тип поезда:(1-Ласточка, 2-Фирменный, 3-Скорый)\n";
 	cin >> train_type;
+	w:if ((train_type != 1) && (train_type != 2) && (train_type != 3))
+	{
+		cout << "Неверный ввод\n";
+		goto on;
+	}
+	if (train_type == 1)
+		carriage_type = 4;
+	else
+	{
+		cout << "Выберите тип вагона(1-плацкарт, 2-купе, 3-СВ)\n";
+		cin >> carriage_type;
+		if ((carriage_type != 1) && (carriage_type != 2) && (carriage_type != 3))
+		{
+			cout << "Неверный ввод\n";
+			goto w;
+
+		}
+	}
+	switch (train_type)
+	{
+	case 1:
+		ex.SetPassengersData(date, 1, carriage_type, temp_count_l, temp_count_f_plac, temp_count_f_comp, temp_count_f_SV, temp_count_s_plac, temp_count_s_comp, temp_count_s_SV, user_data_name, user_data_surname, user_data_patronymic);
+	case 2:
+		ex.SetPassengersData(date, 2, carriage_type, temp_count_l, temp_count_f_plac, temp_count_f_comp, temp_count_f_SV, temp_count_s_plac, temp_count_s_comp, temp_count_s_SV, user_data_name, user_data_surname, user_data_patronymic);
+	case 3:
+		ex.SetPassengersData(date, 3, carriage_type, temp_count_l, temp_count_f_plac, temp_count_f_comp, temp_count_f_SV, temp_count_s_plac, temp_count_s_comp, temp_count_s_SV, user_data_name, user_data_surname, user_data_patronymic);
+	}
 	in:cout << "1. Проверка свободных мест\n2. Создать заказ(Резервирование)\n3. Рассчитать стоимость билетов\n4. Отменить заказ\n5. Сформировать билеты\n6. Выбрать другой поезд\n0. Выход\n";
 	cin >> i;
+	if ((i < 0) || (i >= 7))
+	{
+		cout << "Неверный ввод\n";
+		goto in;
+	}
 	switch (i)
 	{
 	case 1:
@@ -254,15 +322,78 @@ void main()
 		{
 		case 1:
 			cout << "Введите номер места:(1-100 сидячие)\n";
+			cin >> place;
+			if ((place <= 0) || (place > 100))
+			{
+				cout << "Неверный ввод\n";
+				goto in;
+			}
 			break;
 		case 2:
-			cout << "Введите номер места: (1-27 плацкарт верхние, 28-54 плацкарт нижние, 55-72 - купе верхние, 73 - 90 - купе нижние, 91 - 108 - СВ)\n";
+			switch (carriage_type)
+			{
+			case 1:
+				cout << "Введите номер места : (1 - 27 плацкарт верхние, 28 - 54 плацкарт нижние)\n";
+				cin >> place;
+				if ((place <= 0) || (place > 54))
+				{
+					cout << "Неверный ввод\n";
+					goto in;
+				}
+				break;
+			case 2:
+				cout << "Введите номер места : (55-72 - купе верхние, 73 - 90 - купе нижние)\n";
+				cin >> place;
+				if ((place < 55) || (place > 90))
+				{
+					cout << "Неверный ввод\n";
+					goto in;
+				}
+				break;
+			case 3:
+				cout << "Введите номер места : (91 - 108 - СВ)\n";
+				cin >> place;
+				if ((place < 91) || (place > 108))
+				{
+					cout << "Неверный ввод\n";
+					goto in;
+				}
+				break;
+			}
 			break;
 		case 3:
-			cout << "Введите номер места: (1-27 плацкарт верхние, 28-54 плацкарт нижние, 55-72 - купе верхние, 73 - 90 - купе нижние, 91 - 108 - СВ)\n";
+			switch (carriage_type)
+			{
+			case 1:
+				cout << "Введите номер места : (1 - 27 плацкарт верхние, 28 - 54 плацкарт нижние)\n";
+				cin >> place;
+				if ((place <= 0) || (place > 54))
+				{
+					cout << "Неверный ввод\n";
+					goto in;
+				}
+				break;
+			case 2:
+				cout << "Введите номер места : (55-72 - купе верхние, 73 - 90 - купе нижние)\n";
+				cin >> place;
+				if ((place < 55) || (place > 90))
+				{
+					cout << "Неверный ввод\n";
+					goto in;
+				}
+				break;
+			case 3:
+				cout << "Введите номер места : (91 - 108 - СВ)\n";
+				cin >> place;
+				if ((place < 91) || (place > 108))
+				{
+					cout << "Неверный ввод\n";
+					goto in;
+				}
+				break;
+			}
 			break;
 		}
-		cin >> place;
 		if (ex.GetPlaceStatus1(train_type, place) == true)
 		{
 			cout << "Это место уже занято\n";
@@ -364,22 +495,31 @@ void main()
 		switch (train_type)
 		{
 		case 1:
-			ex.SetTicketsData(date, rand() % 100, rand() % 12, user_data);
+			for (i = 1; i < 101; i++)
+				if (ex.IsInOrder(train_type, i) == true)
+				{
+					ex.SetTicketsData(p.date, rand() % 100+1, rand() % 12+1, p.user_data_name, p.user_data_surname, p.user_data_patronymic);
+					cout << "Дата: \n" << t.date << endl << "Номер поезда: \n" << t.train_number << endl << "Номер вагона: \n" << t.carriage_number << endl << "Номер места: \n" << i << endl << "Пассажир: \n" << t.user_data_name << " " << t.user_data_surname << " " << t.user_data_patronymic << endl << "Станция отправки: \n" << t.departure_station << endl << "Станция прибытия: \n" << t.arrival_station << endl;
+				}
+			break;
 		case 2:
-			ex.SetTicketsData(date, rand() % 100, rand() % 12, user_data);
+			for (i = 1; i < 109; i++)
+				if (ex.IsInOrder(train_type, i) == true)
+				{
+					ex.SetTicketsData(p.date, rand() % 100+1, rand() % 12+1, p.user_data_name, p.user_data_surname, p.user_data_patronymic);
+					cout << "Дата: \n" << t.date << endl << "Номер поезда: \n" << t.train_number << endl << "Номер вагона: \n" << t.carriage_number << endl << "Номер места: \n" << i << endl << "Пассажир: \n" << t.user_data_name << " " << t.user_data_surname << " " << t.user_data_patronymic << endl << "Станция отправки: \n" << t.departure_station << endl << "Станция прибытия: \n" << t.arrival_station << endl;
+				}
+			break;
 		case 3:
-			ex.SetTicketsData(date, rand() % 100, rand() % 12, user_data);
+			for (i = 1; i < 109; i++)
+				if (ex.IsInOrder(train_type, i) == true)
+				{
+					ex.SetTicketsData(p.date, rand() % 100+1, rand() % 12+1, p.user_data_name, p.user_data_surname, p.user_data_patronymic);
+					cout << "Дата: \n" << t.date << endl << "Номер поезда: \n" << t.train_number << endl << "Номер вагона: \n" << t.carriage_number << endl << "Номер места: \n" << i << endl << "Пассажир: \n" << t.user_data_name << " " << t.user_data_surname << " " << t.user_data_patronymic << endl << "Станция отправки: \n" << t.departure_station << endl << "Станция прибытия: \n" << t.arrival_station << endl;
+				}
+			break;
 		}
-	case 8:
-		switch (train_type)
-		{
-		case 1:
-			ex.SetPassengersData(date, 1, temp_count_l, temp_count_f_plac, temp_count_f_comp, temp_count_f_SV, temp_count_s_plac, temp_count_s_comp, temp_count_s_SV, user_data);
-		case 2:
-			ex.SetPassengersData(date, 2, temp_count_l, temp_count_f_plac, temp_count_f_comp, temp_count_f_SV, temp_count_s_plac, temp_count_s_comp, temp_count_s_SV, user_data);
-		case 3:
-			ex.SetPassengersData(date, 3, temp_count_l, temp_count_f_plac, temp_count_f_comp, temp_count_f_SV, temp_count_s_plac, temp_count_s_comp, temp_count_s_SV, user_data);
-		}
+		break;
 	case 6:
 		goto on;
 	case 0:
