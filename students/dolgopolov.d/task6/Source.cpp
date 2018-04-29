@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class Bulls_n_Cows_Storage
+class Bulls_n_Cows
 {
 private:
 	vector<int> numbers;
@@ -15,7 +15,7 @@ private:
 	double cows=0;
 	int dont_forget_to_remove_later;
 public:
-	Bulls_n_Cows_Storage(int amount)
+	Bulls_n_Cows(int amount)
 	{
 		int st = pow(10, amount);
 		srand(time(0));
@@ -27,7 +27,6 @@ public:
 			temp = temp / 10;
 		} while (temp != 0);
 	}
-	friend class Bulls_n_Cows;
 
 	vector<int> GetNumbers()
 	{
@@ -43,9 +42,8 @@ public:
 				bulls++;
 			else
 			{
-				for (int j = number.size() - 1; j >= 0; j--)
 					for (int k = number.size() - 1; k >= 0; k--)
-						if ((j != k) && (numbers[j] == number[k]))
+						if ((i != k) && (numbers[i] == number[k]))
 							cows++;
 			}
 	}
@@ -78,8 +76,8 @@ void main()
 	setlocale(LC_ALL, "Russian");
 	cout << "Введите количество цифр в числе:\n";
 	cin >> amount;
-	Bulls_n_Cows_Storage ex(amount);
-	start:cout << "Введите число:\n";
+	Bulls_n_Cows ex(amount);
+start:cout << "Введите число:\n";
 	cin >> number;
 	temp = number;
 	digits.clear();
