@@ -12,14 +12,14 @@ class Bulls_n_Cows
 private:
 	vector<int> numbers;
 	int bulls=0;
-	double cows=0;
+	int cows=0;
 	int dont_forget_to_remove_later;
 public:
 	Bulls_n_Cows(int amount)
 	{
 		int st = pow(10, amount);
 		srand(time(0));
-		int temp = rand() % st + 1;
+		int temp = (rand()*9) % st;
 		dont_forget_to_remove_later = temp;
 		do
 		{
@@ -48,7 +48,7 @@ public:
 			}
 	}
 
-	double GetCows_n_Bulls(int i)
+	int GetCows_n_Bulls(int i)
 	{
 		switch (i)
 		{
@@ -74,10 +74,21 @@ void main()
 	int temp;
 	vector<int> digits;
 	setlocale(LC_ALL, "Russian");
-	cout << "Введите количество цифр в числе:\n";
+l:cout << "Введите количество цифр в числе:\n";
 	cin >> amount;
+k:if (amount <= 0)
+	{
+		cout << "Неверный ввод\n";
+		goto l;
+	}
 	Bulls_n_Cows ex(amount);
-start:cout << "Введите число:\n";
+	if (ex.GetNumbers().size() < amount)
+		goto k;
+	for (int i = ex.GetNumbers().size() - 1; i >= 0; i--)
+		for (int j = 0; j < i; j++)
+			if (ex.GetNumbers()[i] == ex.GetNumbers()[j])
+				goto k;
+start:cout << "Введите число:(без одинаковых цифр)\n";
 	cin >> number;
 	temp = number;
 	digits.clear();
@@ -87,6 +98,18 @@ start:cout << "Введите число:\n";
 		digits.push_back(temp % 10);
 		temp = temp / 10;
 	} while (temp != 0);
+	if (digits.size() != amount)
+	{
+		cout << "Неверный ввод\n";
+		goto start;
+	}
+	for (int i = 0; i < digits.size(); i++)
+		for (int j = 0; j < i; j++)
+			if (digits[i] == digits[j])
+			{
+				cout << "Неверный ввод\n";
+				goto start;
+			}
 	ex.Amount_Of_Bulls_n_Cows(digits);
 	cout << "Число быков: " << ex.GetCows_n_Bulls(1) << endl << "Число коров: " << ex.GetCows_n_Bulls(2) << endl;
 	if (ex.GetCows_n_Bulls(1) != amount)
