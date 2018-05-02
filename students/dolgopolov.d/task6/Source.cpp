@@ -11,21 +11,19 @@ class Bulls_n_Cows
 {
 private:
 	vector<int> numbers;
-	int bulls=0;
-	int cows=0;
-	int dont_forget_to_remove_later;
+	int bulls = 0;
+	int cows = 0;
 public:
 	Bulls_n_Cows(int amount)
 	{
-		int st = pow(10, amount);
-		srand(time(0));
-		int temp = (rand()*9) % st;
-		dont_forget_to_remove_later = temp;
-		do
-		{
-			numbers.push_back(temp % 10);
-			temp = temp / 10;
-		} while (temp != 0);
+			int st = pow(10, amount);
+			srand(time(0));
+			int temp = (rand() * 99) % st;
+			do
+			{
+				numbers.push_back(temp % 10);
+				temp = temp / 10;
+			} while (temp != 0);
 	}
 
 	vector<int> GetNumbers()
@@ -42,9 +40,9 @@ public:
 				bulls++;
 			else
 			{
-					for (int k = number.size() - 1; k >= 0; k--)
-						if ((i != k) && (numbers[i] == number[k]))
-							cows++;
+				for (int k = number.size() - 1; k >= 0; k--)
+					if ((i != k) && (numbers[i] == number[k]))
+						cows++;
 			}
 	}
 
@@ -57,11 +55,6 @@ public:
 		case 2:
 			return cows;
 		}
-	}
-
-	int Dont_Forget_To_Remove_Later()
-	{
-		return dont_forget_to_remove_later;
 	}
 };
 
@@ -76,13 +69,14 @@ void main()
 	setlocale(LC_ALL, "Russian");
 l:cout << "Введите количество цифр в числе:\n";
 	cin >> amount;
+	cout << "Подбираю число, подождите... \n";
 k:if (amount <= 0)
 	{
 		cout << "Неверный ввод\n";
 		goto l;
 	}
 	Bulls_n_Cows ex(amount);
-	if (ex.GetNumbers().size() < amount)
+	if (ex.GetNumbers().size() != amount)
 		goto k;
 	for (int i = ex.GetNumbers().size() - 1; i >= 0; i--)
 		for (int j = 0; j < i; j++)
@@ -92,7 +86,10 @@ start:cout << "Введите число:(без одинаковых цифр)\n";
 	cin >> number;
 	temp = number;
 	digits.clear();
-	cout << "Начальное число: " << ex.Dont_Forget_To_Remove_Later() << endl;
+	cout << "Начальное число: " << endl;  //для проверки
+	for (int i = amount-1; i >= 0; i--)
+		cout << ex.GetNumbers()[i];
+	cout << endl;
 	do
 	{
 		digits.push_back(temp % 10);
