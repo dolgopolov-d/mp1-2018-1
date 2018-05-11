@@ -86,10 +86,6 @@ start:cout << "Введите число:(без одинаковых цифр)\n";
 	cin >> number;
 	temp = number;
 	digits.clear();
-	cout << "Начальное число: " << endl;  //для проверки
-	for (int i = amount-1; i >= 0; i--)
-		cout << ex.GetNumbers()[i];
-	cout << endl;
 	do
 	{
 		digits.push_back(temp % 10);
