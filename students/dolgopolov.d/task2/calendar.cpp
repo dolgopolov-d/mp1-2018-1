@@ -153,7 +153,7 @@ void main()
 	char str[150];
 	setlocale(LC_ALL, "Russian");
 	class TCalendar event;
-	in:
+in:
 	cout << "1. ”становить событие \n2. ”знать дату событи€\n3. Ќайти разницу между датами\n4. —местить событие\n0.¬ыход\n";
 	cin >> a;
 	switch (a)
@@ -167,6 +167,7 @@ void main()
 			cout << "¬ведите дату (день(1-31) мес€ц(1-12) год(1-2020)): " << endl;
 			cin >> d >> m >> y;
 			event.setEvent(n, y, m, d, str);
+			system("cls");
 			goto in;
 		case 2:
 			cout << "¬ведите номер событи€: \n";
@@ -179,6 +180,7 @@ void main()
 			cout << "¬ведите дату, с которой нужно найти разницу (день мес€ц год): \n";
 			cin >> d_d >> m_d >> y_d;
 			event.Difference(n, d_d, m_d, y_d);
+			goto in;
 			break;
 		case 4:
 			cout << "¬ведите номер событи€: \n";
@@ -188,6 +190,7 @@ void main()
 			cout << "¬ведите на сколько ¬ы хотите сместить дату: число мес€ц год:  \n";
 			cin >> d1 >> m1 >> y1;
 			event.moveEvent(n, d1, m1, y1, b);
+			goto in;
 			break;
 		case 0:
 			break;

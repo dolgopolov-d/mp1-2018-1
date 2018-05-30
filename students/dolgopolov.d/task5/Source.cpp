@@ -145,25 +145,6 @@ public:
 			return obj.is_in_order_trainScor_place[place];
 		}
 	}
-
-	void SetPlace(int i, int place)
-	{
-		switch (i)
-		{
-		case 1:
-			obj.trainLastoch_place[place] = "Занято";
-			obj.occupied_trainLastoch_place[place] = true;
-			break;
-		case 2:
-			obj.trainFirm_place[place] = "Занято";
-			obj.occupied_trainFirm_place[place] = true;
-			break;
-		case 3:
-			obj.trainScor_place[place] = "Занято";
-			obj.occupied_trainScor_place[place] = true;
-			break;
-		}
-	}
 	
 	vector<int> Places(int i) 
 	{

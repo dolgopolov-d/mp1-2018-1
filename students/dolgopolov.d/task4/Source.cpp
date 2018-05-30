@@ -13,7 +13,6 @@ class StepCounter
 	ifstream in;
 	ofstream out;
 	int *Steps;
-	int counter;
 	struct Date
 	{
 		int day = 0;
